@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #020617;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1, h2, h3 {
+    font-family: 'Space Grotesk', sans-serif;
+}
+.menu-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-item:hover {
+    background: rgba(34,197,94,0.15);
+    color: #22c55e;
+    transform: translateX(10px);
+    box-shadow: 0 0 15px rgba(34,197,94,0.3);
+    border-radius: 10px;
+}
+
+.severity-card {
+  flex: 1;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(15,23,42,0.9);
+}
+
+.critical {
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 20px rgba(239,68,68,.3);
+}
+
+.high {
+  border: 2px solid #f97316;
+  box-shadow: 0 0 20px rgba(249,115,22,.3);
+}
+
+.medium {
+  border: 2px solid #eab308;
+  box-shadow: 0 0 20px rgba(234,179,8,.3);
+}
+
+.low {
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 20px rgba(59,130,246,.3);
+}

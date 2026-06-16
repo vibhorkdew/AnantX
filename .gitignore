@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Environment files
+.env
+
+# Node modules
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Kubernetes temp files
+*.tmp
+
+# Database
+*.db
+
+minikube-linux-amd64

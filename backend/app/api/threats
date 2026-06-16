@@ -1,0 +1,14 @@
+[
+  {
+    "id":"THR-001",
+    "severity":"HIGH",
+    "title":"Multiple Critical Vulnerabilities Detected",
+    "status":"ACTIVE"
+  },
+  {
+    "id":"THR-002",
+    "severity":"MEDIUM",
+    "title":"Container Exposure Risk",
+    "status":"MONITORING"
+  }
+]

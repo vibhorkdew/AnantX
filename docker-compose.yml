@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - anantx-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    networks:
+      - anantx-network
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
+    networks:
+      - anantx-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - anantx-network
+
+  falco:
+    image: falcosecurity/falco:latest
+    privileged: true
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /proc:/host/proc:ro
+      - /boot:/host/boot:ro
+      - /lib/modules:/host/lib/modules:ro
+      - /usr:/host/usr:ro
+    networks:
+      - anantx-network
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: kavachuser
+      POSTGRES_PASSWORD: securepassword
+      POSTGRES_DB: anantx
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - anantx-network
+
+volumes:
+  postgres_data:
+
+networks:
+  anantx-network:
