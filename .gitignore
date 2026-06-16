@@ -1,31 +1,53 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtual Environments
 venv/
+backend/venv/
 
-# Environment files
-.env
-
-# Node modules
+# Node
 node_modules/
+frontend/node_modules/
 
-# Build files
-dist/
-build/
+# Environment Files
+.env
+.env.*
 
 # Logs
 *.log
 
-# VS Code
+# Reports
+reports/
+backend/reports/
+
+# IDE
 .vscode/
+.idea/
 
-# OS files
+# OS
 .DS_Store
+Thumbs.db
 
-# Kubernetes temp files
-*.tmp
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
 
-# Database
-*.db
+# Kubernetes
+*.kubeconfig
 
-minikube-linux-amd64
+# Sonar
+.scannerwork/
+
+# Docker
+docker-data/
+
+# Misc
+coverage/
+dist/
+build/
