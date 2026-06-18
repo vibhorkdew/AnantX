@@ -6,6 +6,7 @@ import {
     Navigate,
     Outlet
 } from "react-router-dom";
+
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Containers from "./pages/Containers";
@@ -13,6 +14,7 @@ import Vulnerabilities from "./pages/Vulnerabilities";
 import Monitoring from "./pages/Monitoring";
 import AIAssistant from "./pages/AIAssistant";
 import Threats from "./pages/Threats";
+import Logs from "./pages/Logs";
 
 const RequireAuth = () => {
     const token = localStorage.getItem("token");
@@ -55,25 +57,35 @@ function App() {
                         path="/dashboard"
                         element={<Dashboard />}
                     />
+
                     <Route
                         path="/dashboard/threats"
                         element={<Threats />}
                     />
+
                     <Route
                         path="/dashboard/vulnerabilities"
                         element={<Vulnerabilities />}
                     />
+
                     <Route
                         path="/dashboard/containers"
                         element={<Containers />}
                     />
+
                     <Route
                         path="/dashboard/ai"
                         element={<AIAssistant />}
                     />
+
                     <Route
                         path="/dashboard/monitoring"
                         element={<Monitoring />}
+                    />
+
+                    <Route
+                        path="/dashboard/logs"
+                        element={<Logs />}
                     />
                 </Route>
 

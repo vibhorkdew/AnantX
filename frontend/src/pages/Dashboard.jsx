@@ -12,7 +12,8 @@ import {
     FaBell,
     FaUser,
     FaSignOutAlt,
-    FaCog
+    FaCog,
+    FaFileAlt
 } from "react-icons/fa";
 
 
@@ -75,6 +76,7 @@ const Dashboard = () => {
             icon: <FaRobot size={34} />,
             color: "#a855f7"
         },
+
         {
             title: "AnantBuy Status",
             value: anantBuyStatus,
@@ -83,6 +85,13 @@ const Dashboard = () => {
                 anantBuyStatus === "UP"
                     ? "#22c55e"
                     : "#ef4444"
+        },
+
+        {
+            title: "Logs Center",
+            value: "ACTIVE",
+            icon: <FaFileAlt size={34} />,
+            color: "#06b6d4"
         }
 
     ];
@@ -181,6 +190,14 @@ const Dashboard = () => {
                     >
                         <FaChartLine />
                         Monitoring
+                    </li>
+                    <li
+                        className="menu-item"
+                        style={styles.menuItem}
+                        onClick={() => navigate("/dashboard/logs")}
+                    >
+                        <FaFileAlt />
+                        Logs Center
                     </li>
                     <li
                         className="menu-item"
@@ -288,7 +305,15 @@ const Dashboard = () => {
                             key={index}
                             style={{
                                 ...styles.card,
-                                borderTop: `3px solid ${card.color}`
+                                borderTop: `3px solid ${card.color}`,
+                                cursor: card.title === "Logs Center"
+                                    ? "pointer"
+                                    : "default"
+                            }}
+                            onClick={() => {
+                                if (card.title === "Logs Center") {
+                                    navigate("/dashboard/logs");
+                                }
                             }}
                         >
 
