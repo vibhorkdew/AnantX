@@ -2,6 +2,17 @@ version: '3.9'
 
 services:
 
+  fluent-bit:
+    image: fluent/fluent-bit:latest
+    container_name: fluent-bit
+    volumes:
+      - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    depends_on:
+      - splunk
+    networks:
+      - anantx-network
+
   frontend:
     build: ./frontend
     ports:

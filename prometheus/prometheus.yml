@@ -23,4 +23,4 @@ scrape_configs:
 
     static_configs:
       - targets:
-          - anantbuy-api:8000
+          - "172.25.0.2:8000"
