@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
     FaShieldAlt,
     FaBug,
     FaServer,
     FaRobot,
-    FaBell,
     FaHome,
     FaChartLine,
     FaExclamationTriangle,
-    FaBoxes
+    FaBoxes,
+    FaBell,
+    FaUser,
+    FaSignOutAlt,
+    FaCog
 } from "react-icons/fa";
 
-import logo from "../assets/anantx-logo.png";
 
+import logo from "../assets/anantx-logo.png";
 const Dashboard = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/");
+    };
     const [anantBuyStatus, setAnantBuyStatus] =
         useState("UNKNOWN");
 
@@ -174,7 +182,23 @@ const Dashboard = () => {
                         <FaChartLine />
                         Monitoring
                     </li>
+                    <li
+                        className="menu-item"
+                        style={styles.menuItem}
+                        onClick={() => navigate("/dashboard/profile")}
+                    >
+                        <FaUser />
+                        Profile
+                    </li>
 
+                    <li
+                        className="menu-item"
+                        style={styles.menuItem}
+                        onClick={handleLogout}
+                    >
+                        <FaSignOutAlt />
+                        Logout
+                    </li>
                 </ul>
 
             </div>
@@ -199,8 +223,57 @@ const Dashboard = () => {
 
                     </div>
 
-                    <div style={styles.notify}>
-                        <FaBell />
+                    <div style={styles.headerActions}>
+
+                        <div style={styles.notify}>
+                            <FaBell />
+                        </div>
+
+                        <div style={{ position: "relative" }}>
+
+                            <button
+                                style={styles.userButton}
+                                onClick={() => setMenuOpen(!menuOpen)}
+                            >
+                                <FaUser />
+                                <span>Admin</span>
+                            </button>
+
+                            {menuOpen && (
+                                <div style={styles.dropdown}>
+
+                                    <div
+                                        style={styles.dropdownItem}
+                                        onClick={() => navigate("/dashboard/profile")}
+                                    >
+                                        <FaUser />
+                                        Profile
+                                    </div>
+
+                                    <div
+                                        style={styles.dropdownItem}
+                                        onClick={() => navigate("/dashboard/settings")}
+                                    >
+                                        <FaCog />
+                                        Settings
+                                    </div>
+
+                                    <div
+                                        style={{
+                                            ...styles.dropdownItem,
+                                            color: "#ef4444"
+                                        }}
+                                        onClick={handleLogout}
+                                    >
+                                        <FaSignOutAlt />
+                                        Logout
+                                    </div>
+
+                                </div>
+                            )}
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -401,6 +474,45 @@ const styles = {
         transition: "all 0.3s ease",
         border: "1px solid rgba(255,255,255,0.05)"
     },
+    headerActions: {
+        display: "flex",
+        alignItems: "center",
+        gap: "14px"
+    },
+
+    userButton: {
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        background: "#0f172a",
+        color: "white",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "14px",
+        padding: "14px 18px",
+        cursor: "pointer"
+    },
+
+    dropdown: {
+        position: "absolute",
+        top: "58px",
+        right: 0,
+        width: "180px",
+        background: "#0f172a",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: "14px",
+        overflow: "hidden",
+        zIndex: 1000,
+        boxShadow: "0 10px 25px rgba(0,0,0,0.4)"
+    },
+
+    dropdownItem: {
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        padding: "14px",
+        cursor: "pointer",
+        borderBottom: "1px solid rgba(255,255,255,0.04)"
+    },
 
     iconBox: {
         marginBottom: "20px"
@@ -452,6 +564,7 @@ const styles = {
     critical: {
         color: "#ef4444"
     }
+
 };
 
 export default Dashboard;

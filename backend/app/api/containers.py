@@ -1,24 +1,25 @@
 from fastapi import APIRouter
 import docker
 
-router = APIRouter(prefix="/api", tags=["containers"])
+router = APIRouter(
+    prefix="/api",
+    tags=["containers"]
+)
 
 @router.get("/containers")
 def get_containers():
-    try:
-        client = docker.from_env()
 
-        containers = []
+    client = docker.from_env()
 
-        for c in client.containers.list():
-            containers.append({
-                "id": c.short_id,
-                "name": c.name,
-                "image": c.image.tags[0] if c.image.tags else "unknown",
-                "status": c.status
-            })
+    containers = client.containers.list(all=True)
 
-        return containers
+    result = []
 
-    except Exception as e:
-        return {"error": str(e)}
+    for c in containers:
+
+        result.append({
+            "name": c.name,
+            "status": c.status
+        })
+
+    return result
