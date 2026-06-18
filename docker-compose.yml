@@ -67,6 +67,20 @@ services:
     networks:
       - anantx-network
 
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk
+    environment:
+      SPLUNK_START_ARGS: --accept-license
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_PASSWORD: AnantX@123
+    ports:
+      - "8001:8000"
+      - "8088:8088"
+    restart: unless-stopped
+    networks:
+      - anantx-network
+
 volumes:
   postgres_data:
 

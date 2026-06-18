@@ -4,21 +4,55 @@ import { backButtonStyle } from "../styles/navigationStyles";
 
 function Monitoring() {
     const navigate = useNavigate();
+
     const [data, setData] = useState(null);
+    const [lastUpdated, setLastUpdated] = useState("");
+
+    const loadMonitoringData = () => {
+        fetch("http://localhost:8000/api/monitoring")
+            .then((res) => res.json())
+            .then((data) => {
+                setData(data);
+                setLastUpdated(
+                    new Date().toLocaleTimeString()
+                );
+            })
+            .catch((err) => console.error(err));
+    };
 
     useEffect(() => {
-        fetch("http://localhost:8000/api/monitoring")
-            .then(res => res.json())
-            .then(data => setData(data));
+        loadMonitoringData();
+
+        const interval = setInterval(() => {
+            loadMonitoringData();
+        }, 15000);
+
+        return () => clearInterval(interval);
     }, []);
 
     if (!data) {
-        return <h2 style={{ color: "white" }}>Loading...</h2>;
+        return (
+            <div
+                style={{
+                    background: "#020617",
+                    minHeight: "100vh",
+                    color: "white",
+                    padding: "30px"
+                }}
+            >
+                <h2>Loading Monitoring Center...</h2>
+            </div>
+        );
     }
 
-    const runningContainers = data.containers.filter(
-        container => container.status === "running"
-    ).length;
+    const runningContainers =
+        data.containers.filter(
+            (container) => container.status === "running"
+        ).length;
+
+    const platformHealth = Math.round(
+        (runningContainers / data.count) * 100
+    );
 
     return (
         <div
@@ -29,8 +63,17 @@ function Monitoring() {
                 padding: "30px"
             }}
         >
-            {/* BUTTON CONTROLS */}
-            <div style={{ display: "flex", gap: "15px", marginBottom: "25px" }}>
+
+            {/* TOP ACTIONS */}
+
+            <div
+                style={{
+                    display: "flex",
+                    gap: "15px",
+                    marginBottom: "25px"
+                }}
+            >
+
                 <button
                     onClick={() => navigate("/dashboard")}
                     style={backButtonStyle}
@@ -39,21 +82,23 @@ function Monitoring() {
                 </button>
 
                 <button
-                    onClick={() => window.open("http://localhost:3001", "_blank")}
+                    onClick={loadMonitoringData}
                     style={{
-                        padding: "10px 16px",
+                        padding: "10px 18px",
                         borderRadius: "10px",
                         border: "1px solid #38bdf8",
-                        cursor: "pointer",
                         background: "transparent",
                         color: "#38bdf8",
-                        fontWeight: "600",
-                        transition: "0.2s"
+                        cursor: "pointer",
+                        fontWeight: "600"
                     }}
                 >
-                    📊 Open Grafana Dashboard
+                    🔄 Refresh
                 </button>
+
             </div>
+
+            {/* TITLE */}
 
             <h1
                 style={{
@@ -62,77 +107,80 @@ function Monitoring() {
                     color: "#38bdf8"
                 }}
             >
-                Container Monitoring Center
+                Monitoring Center
             </h1>
 
             <p
                 style={{
                     color: "#94a3b8",
-                    marginBottom: "40px"
+                    marginBottom: "8px"
                 }}
             >
                 Real-Time Infrastructure & Container Health Monitoring
             </p>
 
+            <p
+                style={{
+                    color: "#64748b",
+                    marginBottom: "35px",
+                    fontSize: "14px"
+                }}
+            >
+                Last Updated: {lastUpdated}
+            </p>
+
             {/* SUMMARY CARDS */}
+
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))",
+                    gridTemplateColumns:
+                        "repeat(auto-fit,minmax(250px,1fr))",
                     gap: "20px",
                     marginBottom: "40px"
                 }}
             >
+
                 <div
-                    style={{
-                        background: "#0f172a",
-                        padding: "25px",
-                        borderRadius: "18px",
-                        border: "1px solid #38bdf8"
-                    }}
+                    style={cardStyle("#38bdf8")}
                 >
                     <h3>Total Containers</h3>
-                    <h1 style={{ color: "#38bdf8" }}>{data.count}</h1>
+                    <h1 style={{ color: "#38bdf8" }}>
+                        {data.count}
+                    </h1>
                 </div>
 
                 <div
-                    style={{
-                        background: "#0f172a",
-                        padding: "25px",
-                        borderRadius: "18px",
-                        border: "1px solid #22c55e"
-                    }}
+                    style={cardStyle("#22c55e")}
                 >
                     <h3>Running Containers</h3>
-                    <h1 style={{ color: "#22c55e" }}>{runningContainers}</h1>
+                    <h1 style={{ color: "#22c55e" }}>
+                        {runningContainers}
+                    </h1>
                 </div>
 
                 <div
-                    style={{
-                        background: "#0f172a",
-                        padding: "25px",
-                        borderRadius: "18px",
-                        border: "1px solid #f59e0b"
-                    }}
+                    style={cardStyle("#f59e0b")}
                 >
                     <h3>Platform Health</h3>
-                    <h1 style={{ color: "#f59e0b" }}>100%</h1>
+                    <h1 style={{ color: "#f59e0b" }}>
+                        {platformHealth}%
+                    </h1>
                 </div>
 
                 <div
-                    style={{
-                        background: "#0f172a",
-                        padding: "25px",
-                        borderRadius: "18px",
-                        border: "1px solid #a855f7"
-                    }}
+                    style={cardStyle("#a855f7")}
                 >
-                    <h3>Status</h3>
-                    <h1 style={{ color: "#a855f7" }}>ACTIVE</h1>
+                    <h3>System Status</h3>
+                    <h1 style={{ color: "#a855f7" }}>
+                        ACTIVE
+                    </h1>
                 </div>
+
             </div>
 
-            {/* TABLE HEADER */}
+            {/* CONTAINERS SECTION */}
+
             <div
                 style={{
                     background: "#0f172a",
@@ -141,60 +189,102 @@ function Monitoring() {
                     borderBottom: "1px solid #1e293b"
                 }}
             >
-                <h2 style={{ margin: 0, color: "#38bdf8" }}>Active Containers</h2>
+                <h2
+                    style={{
+                        margin: 0,
+                        color: "#38bdf8"
+                    }}
+                >
+                    Active Containers
+                </h2>
             </div>
 
-            {/* TABLE */}
             <table
                 style={{
                     width: "100%",
                     borderCollapse: "collapse",
-                    background: "#0f172a",
-                    borderRadius: "0 0 18px 18px",
-                    overflow: "hidden"
+                    background: "#0f172a"
                 }}
             >
                 <thead>
-                    <tr style={{ background: "#111827" }}>
-                        <th style={{ padding: "16px", textAlign: "left" }}>
+
+                    <tr
+                        style={{
+                            background: "#111827"
+                        }}
+                    >
+
+                        <th
+                            style={tableHeader}
+                        >
                             Container Name
                         </th>
-                        <th style={{ padding: "16px", textAlign: "left" }}>
+
+                        <th
+                            style={tableHeader}
+                        >
                             Status
                         </th>
+
                     </tr>
+
                 </thead>
+
                 <tbody>
-                    {data.containers.map((container, index) => (
-                        <tr
-                            key={index}
-                            style={{ borderBottom: "1px solid #1e293b" }}
-                        >
-                            <td style={{ padding: "16px", fontWeight: "600" }}>
-                                {container.name}
-                            </td>
-                            <td style={{ padding: "16px" }}>
-                                <span
-                                    style={{
-                                        padding: "8px 14px",
-                                        borderRadius: "999px",
-                                        fontWeight: "600",
-                                        background:
-                                            container.status === "running"
-                                                ? "#14532d"
-                                                : "#7f1d1d",
-                                        color:
-                                            container.status === "running"
-                                                ? "#22c55e"
-                                                : "#ef4444"
-                                    }}
+
+                    {data.containers.map(
+                        (container, index) => (
+                            <tr
+                                key={index}
+                                style={{
+                                    borderBottom:
+                                        "1px solid #1e293b"
+                                }}
+                            >
+
+                                <td
+                                    style={tableCell}
                                 >
-                                    ● {container.status.toUpperCase()}
-                                </span>
-                            </td>
-                        </tr>
-                    ))}
+                                    {container.name}
+                                </td>
+
+                                <td
+                                    style={tableCell}
+                                >
+
+                                    <span
+                                        style={{
+                                            background:
+                                                container.status ===
+                                                "running"
+                                                    ? "#14532d"
+                                                    : "#7f1d1d",
+                                            color:
+                                                container.status ===
+                                                "running"
+                                                    ? "#22c55e"
+                                                    : "#ef4444",
+                                            padding:
+                                                "8px 14px",
+                                            borderRadius:
+                                                "999px",
+                                            fontSize:
+                                                "12px",
+                                            fontWeight:
+                                                "bold"
+                                        }}
+                                    >
+                                        {container.status.toUpperCase()}
+                                    </span>
+
+                                </td>
+
+                            </tr>
+                        )
+                    )}
+
                 </tbody>
+
             </table>
 
             <div
@@ -205,10 +295,27 @@ function Monitoring() {
                     fontSize: "12px"
                 }}
             >
-                © 2026 AnantX Team | AnantX DevSecOps Platform
+                © 2026 AnantX Team | Monitoring Center
             </div>
+
         </div>
     );
 }
+
+const cardStyle = (color) => ({
+    background: "#0f172a",
+    padding: "25px",
+    borderRadius: "18px",
+    border: `1px solid ${color}`
+});
+
+const tableHeader = {
+    padding: "16px",
+    textAlign: "left"
+};
+
+const tableCell = {
+    padding: "16px"
+};
 
 export default Monitoring;

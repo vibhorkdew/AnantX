@@ -1,112 +1,112 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { backButtonStyle } from "../styles/navigationStyles";
+    import React, { useEffect, useState } from "react";
+    import { useNavigate } from "react-router-dom";
+    import { backButtonStyle } from "../styles/navigationStyles";
 
-const Containers = () => {
-    const navigate = useNavigate();
+    const Containers = () => {
+        const navigate = useNavigate();
 
-    const [containers, setContainers] = useState([]);
+        const [containers, setContainers] = useState([]);
 
-    useEffect(() => {
+        useEffect(() => {
 
-        fetch("http://localhost:8000/api/containers")
-            .then((res) => res.json())
-            .then((data) => setContainers(data))
-            .catch((err) => console.error(err));
+            fetch("http://localhost:8000/api/containers")
+                .then((res) => res.json())
+                .then((data) => setContainers(data))
+                .catch((err) => console.error(err));
 
-    }, []);
+        }, []);
 
-    return (
+        return (
 
-        <div
-            style={{
-                background: "#020617",
-                minHeight: "100vh",
-                color: "white",
-                padding: "30px"
-            }}
-        >
-
-            <button
-                onClick={() => navigate("/dashboard")}
-                style={backButtonStyle}
-            >
-                ← Back to Dashboard
-            </button>
-
-            <h1>
-                Running Containers
-            </h1>
-
-            <table
+            <div
                 style={{
-                    width: "100%",
-                    borderCollapse: "collapse"
+                    background: "#020617",
+                    minHeight: "100vh",
+                    color: "white",
+                    padding: "30px"
                 }}
             >
 
-                <thead>
+                <button
+                    onClick={() => navigate("/dashboard")}
+                    style={backButtonStyle}
+                >
+                    ← Back to Dashboard
+                </button>
 
-                    <tr>
+                <h1>
+                    Running Containers
+                </h1>
 
-                        <th style={cellStyle}>
-                            ID
-                        </th>
+                <table
+                    style={{
+                        width: "100%",
+                        borderCollapse: "collapse"
+                    }}
+                >
 
-                        <th style={cellStyle}>
-                            Name
-                        </th>
+                    <thead>
 
-                        <th style={cellStyle}>
-                            Image
-                        </th>
+                        <tr>
 
-                        <th style={cellStyle}>
-                            Status
-                        </th>
+                            <th style={cellStyle}>
+                                ID
+                            </th>
 
-                    </tr>
+                            <th style={cellStyle}>
+                                Name
+                            </th>
 
-                </thead>
+                            <th style={cellStyle}>
+                                Image
+                            </th>
 
-                <tbody>
-
-                    {containers.map((container) => (
-
-                        <tr key={container.id}>
-
-                            <td style={cellStyle}>
-                                {container.id}
-                            </td>
-
-                            <td style={cellStyle}>
-                                {container.name}
-                            </td>
-
-                            <td style={cellStyle}>
-                                {container.image}
-                            </td>
-
-                            <td style={cellStyle}>
-                                {container.status}
-                            </td>
+                            <th style={cellStyle}>
+                                Status
+                            </th>
 
                         </tr>
 
-                    ))}
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        {containers.map((container) => (
 
-        </div>
+                            <tr key={container.id}>
 
-    );
-};
+                                <td style={cellStyle}>
+                                    {container.id}
+                                </td>
 
-const cellStyle = {
-    border: "1px solid #334155",
-    padding: "10px"
-};
+                                <td style={cellStyle}>
+                                    {container.name}
+                                </td>
 
-export default Containers;
+                                <td style={cellStyle}>
+                                    {container.image}
+                                </td>
+
+                                <td style={cellStyle}>
+                                    {container.status}
+                                </td>
+
+                            </tr>
+
+                        ))}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        );
+    };
+
+    const cellStyle = {
+        border: "1px solid #334155",
+        padding: "10px"
+    };
+
+    export default Containers;

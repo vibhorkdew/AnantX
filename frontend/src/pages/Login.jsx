@@ -10,7 +10,7 @@ const Login = ({ setAuthenticated }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
+const [error, setError] = useState("");
     const handleLogin = async () => {
         try {
             const response = await API.post("/login", {
@@ -27,7 +27,7 @@ const Login = ({ setAuthenticated }) => {
             navigate("/dashboard", { replace: true });
         } catch (error) {
             console.log(error.response);
-            alert("Invalid credentials");
+            setError("Invalid username or password");
         }
     };
 
@@ -126,6 +126,21 @@ const Login = ({ setAuthenticated }) => {
                     >
                         Secure Login
                     </button>
+
+                    {
+                        error && (
+                            <div
+                                style={{
+                                    color: "#ef4444",
+                                    marginTop: "10px",
+                                    fontSize: "14px"
+                                }}
+                            >
+                                {error}
+                            </div>
+                        )
+                    }
+
                     <p
                         style={{
                             color: "#64748b",
@@ -277,4 +292,3 @@ const styles = {
 };
 
 export default Login;
-
