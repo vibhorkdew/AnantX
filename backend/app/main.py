@@ -11,6 +11,7 @@ from app.api import monitoring
 from app.api import ai
 from app.api import threats
 from app.api import metrics
+from app.api import logs
 from app.api import falco
 from app.api import containers
 
@@ -42,6 +43,7 @@ app.include_router(monitoring.router)
 app.include_router(ai.router)
 app.include_router(threats.router)
 app.include_router(falco.router)
+app.include_router(logs.router)
 
 # Prometheus Metrics Endpoint
 metrics_app = make_asgi_app()
