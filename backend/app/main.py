@@ -14,7 +14,7 @@ from app.api import metrics
 from app.api import logs
 from app.api import falco
 from app.api import containers
-
+from app.api import dashboard
 app = FastAPI(
     title="AnantX API",
     version="1.0.0"
@@ -44,6 +44,7 @@ app.include_router(ai.router)
 app.include_router(threats.router)
 app.include_router(falco.router)
 app.include_router(logs.router)
+app.include_router(dashboard.router)
 
 # Prometheus Metrics Endpoint
 metrics_app = make_asgi_app()

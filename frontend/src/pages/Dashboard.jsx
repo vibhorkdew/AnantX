@@ -26,76 +26,81 @@ const Dashboard = () => {
         localStorage.removeItem("user");
         navigate("/");
     };
-    const [anantBuyStatus, setAnantBuyStatus] =
-        useState("UNKNOWN");
-
-
-    const [summary, setSummary] = useState({
-        running_containers: 0,
-        healthy_services: 0,
-        platform_status: "UNKNOWN"
-    });
+    const [metrics, setMetrics] = useState({
+    healthy_services: 0,
+    anantbuy_status: "UNKNOWN",
+    cpu_usage: 0,
+    memory_usage: 0,
+    platform_status: "UNKNOWN"
+});
 
     useEffect(() => {
 
-        fetch("http://localhost:8000/api/monitoring/summary")
+    const loadMetrics = () => {
+
+        fetch("http://localhost:8000/api/dashboard/metrics")
             .then((res) => res.json())
             .then((data) => {
-                setSummary(data);
+                setMetrics(data);
             })
             .catch((err) => {
                 console.error(err);
             });
-        fetch("http://localhost:8000/api/monitoring/anantbuy")
-            .then((res) => res.json())
-            .then((data) => {
-                setAnantBuyStatus(data.status);
-            });
 
-    }, []);
+    };
+
+    loadMetrics();
+
+    const interval = setInterval(loadMetrics, 10000);
+
+    return () => clearInterval(interval);
+
+}, []);
 
     const cards = [
 
-        {
-            title: "Healthy Services",
-            value: summary.healthy_services,
-            icon: <FaShieldAlt size={34} />,
-            color: "#22c55e"
-        },
+    {
+        title: "Healthy Services",
+        value: metrics.healthy_services,
+        icon: <FaShieldAlt size={34} />,
+        color: "#22c55e"
+    },
 
-        {
-            title: "Running Containers",
-            value: summary.running_containers,
-            icon: <FaServer size={34} />,
-            color: "#3b82f6"
-        },
+    {
+        title: "CPU Usage",
+        value: `${metrics.cpu_usage}%`,
+        icon: <FaServer size={34} />,
+        color: "#3b82f6"
+    },
 
-        {
-            title: "Platform Status",
-            value: summary.platform_status,
-            icon: <FaRobot size={34} />,
-            color: "#a855f7"
-        },
+    {
+        title: "Memory Usage",
+        value: `${metrics.memory_usage} MB`,
+        icon: <FaRobot size={34} />,
+        color: "#a855f7"
+    },
 
-        {
-            title: "AnantBuy Status",
-            value: anantBuyStatus,
-            icon: <FaChartLine size={34} />,
-            color:
-                anantBuyStatus === "UP"
-                    ? "#22c55e"
-                    : "#ef4444"
-        },
+    {
+        title: "Platform Status",
+        value: metrics.platform_status,
+        icon: <FaChartLine size={34} />,
+        color:
+            metrics.platform_status === "ACTIVE"
+                ? "#22c55e"
+                : "#ef4444"
+    },
 
-        {
-            title: "Logs Center",
-            value: "ACTIVE",
-            icon: <FaFileAlt size={34} />,
-            color: "#06b6d4"
-        }
+    {
+        title: "AnantBuy Status",
+        value: metrics.anantbuy_status,
+        icon: <FaBoxes size={34} />,
+        color:
+            metrics.anantbuy_status === "UP"
+                ? "#22c55e"
+                : "#ef4444"
+    }
 
-    ];
-
+];
     return (
 
         <div style={styles.container}>
