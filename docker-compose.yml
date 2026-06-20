@@ -5,6 +5,7 @@ services:
   fluent-bit:
     image: fluent/fluent-bit:latest
     container_name: fluent-bit
+    restart: unless-stopped
     volumes:
       - ./fluent-bit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -15,6 +16,7 @@ services:
 
   frontend:
     build: ./frontend
+    restart: unless-stopped
     ports:
       - "3000:3000"
     depends_on:
@@ -24,6 +26,7 @@ services:
 
   backend:
     build: ./backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
@@ -31,22 +34,28 @@ services:
     env_file:
       - ./backend/.env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - anantx-network
+      - anant-monitoring
 
   prometheus:
     image: prom/prometheus
+    restart: unless-stopped
     ports:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    restart: unless-stopped
+    depends_on:
+      - backend
     networks:
       - anantx-network
+      - anant-monitoring
 
   grafana:
     image: grafana/grafana
+    restart: unless-stopped
     ports:
       - "3001:3000"
     networks:
@@ -54,6 +63,7 @@ services:
 
   falco:
     image: falcosecurity/falco:latest
+    restart: unless-stopped
     privileged: true
     pid: host
     volumes:
@@ -67,6 +77,7 @@ services:
 
   db:
     image: postgres:15
+    restart: unless-stopped
     environment:
       POSTGRES_USER: kavachuser
       POSTGRES_PASSWORD: securepassword
@@ -75,12 +86,20 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kavachuser -d anantx"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
     networks:
       - anantx-network
 
   splunk:
     image: splunk/splunk:latest
     container_name: splunk
+    restart: unless-stopped
     environment:
       SPLUNK_START_ARGS: --accept-license
       SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
@@ -88,7 +107,6 @@ services:
     ports:
       - "8001:8000"
       - "8088:8088"
-    restart: unless-stopped
     networks:
       - anantx-network
 
@@ -97,3 +115,7 @@ volumes:
 
 networks:
   anantx-network:
+
+  anant-monitoring:
+    external: true
+    name: anant-monitoring

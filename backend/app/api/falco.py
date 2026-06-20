@@ -1,65 +1,47 @@
 from fastapi import APIRouter
-import subprocess
-import re
+import requests
+import os
+import urllib3
+
+urllib3.disable_warnings()
 
 router = APIRouter(
     prefix="/api/falco",
     tags=["Falco"]
 )
 
-FALCO_CONTAINER = "anantx-falco-1"
+SPLUNK_HOST = os.getenv("SPLUNK_HOST", "splunk")
+SPLUNK_PORT = os.getenv("SPLUNK_PORT", "8089")
+SPLUNK_USERNAME = os.getenv("SPLUNK_USERNAME", "admin")
+SPLUNK_PASSWORD = os.getenv("SPLUNK_PASSWORD")
 
 
 @router.get("")
 def get_falco_alerts():
 
+    search_query = '''
+    search index=* "container_name="
+    | head 20
+    '''
+
     try:
-        result = subprocess.check_output(
-            [
-                "docker",
-                "logs",
-                FALCO_CONTAINER,
-                "--tail",
-                "50"
-            ],
-            stderr=subprocess.STDOUT,
-            text=True
+
+        response = requests.post(
+            f"https://{SPLUNK_HOST}:{SPLUNK_PORT}/services/search/jobs/export",
+            auth=(SPLUNK_USERNAME, SPLUNK_PASSWORD),
+            verify=False,
+            data={
+                "search": search_query,
+                "output_mode": "json"
+            }
         )
 
-        alerts = []
-
-        for line in result.splitlines():
-
-            if "container_name=" in line:
-
-                container = "unknown"
-
-                match = re.search(
-                    r"container_name=([^\s]+)",
-                    line
-                )
-
-                if match:
-                    container = match.group(1)
-
-                severity = "NOTICE"
-
-                if "Critical" in line:
-                    severity = "CRITICAL"
-
-                alerts.append({
-                    "severity": severity,
-                    "container": container,
-                    "rule": line[:120],
-                    "time": "Live"
-                })
-
         return {
-            "alerts": alerts
+            "raw": response.text
         }
 
     except Exception as e:
+
         return {
-            "alerts": [],
             "error": str(e)
         }
