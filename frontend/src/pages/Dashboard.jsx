@@ -155,7 +155,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/threats")}
+                        onClick={() => navigate("/threats")}
                     >
                         <FaExclamationTriangle />
                         Threats
@@ -164,7 +164,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/vulnerabilities")}
+                        onClick={() => navigate("/vulnerabilities")}
                     >
                         <FaBug />
                         Vulnerabilities
@@ -173,7 +173,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/containers")}
+                        onClick={() => navigate("/containers")}
                     >
                         <FaBoxes />
                         Containers
@@ -182,7 +182,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/ai")}
+                        onClick={() => navigate("/ai")}
                     >
                         <FaRobot />
                         AI Assistant
@@ -191,7 +191,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/monitoring")}
+                        onClick={() => navigate("/monitoring")}
                     >
                         <FaChartLine />
                         Monitoring
@@ -199,7 +199,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/logs")}
+                        onClick={() => navigate("/logs")}
                     >
                         <FaFileAlt />
                         Logs Center
@@ -207,7 +207,7 @@ const Dashboard = () => {
                     <li
                         className="menu-item"
                         style={styles.menuItem}
-                        onClick={() => navigate("/dashboard/profile")}
+                        onClick={() => navigate("/profile")}
                     >
                         <FaUser />
                         Profile
@@ -317,7 +317,7 @@ const Dashboard = () => {
                             }}
                             onClick={() => {
                                 if (card.title === "Logs Center") {
-                                    navigate("/dashboard/logs");
+                                    navigate("/logs");
                                 }
                             }}
                         >

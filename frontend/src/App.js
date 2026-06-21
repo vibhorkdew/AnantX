@@ -41,6 +41,8 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+
+                {/* Public Route */}
                 <Route
                     path="/login"
                     element={
@@ -52,64 +54,82 @@ function App() {
                     }
                 />
 
+                {/* Protected Routes */}
                 <Route element={<RequireAuth />}>
+
                     <Route
                         path="/dashboard"
                         element={<Dashboard />}
                     />
 
                     <Route
-                        path="/dashboard/threats"
+                        path="/threats"
                         element={<Threats />}
                     />
 
                     <Route
-                        path="/dashboard/vulnerabilities"
+                        path="/vulnerabilities"
                         element={<Vulnerabilities />}
                     />
 
                     <Route
-                        path="/dashboard/containers"
+                        path="/containers"
                         element={<Containers />}
                     />
 
                     <Route
-                        path="/dashboard/ai"
-                        element={<AIAssistant />}
-                    />
-
-                    <Route
-                        path="/dashboard/monitoring"
+                        path="/monitoring"
                         element={<Monitoring />}
                     />
 
                     <Route
-                        path="/dashboard/logs"
+                        path="/logs"
                         element={<Logs />}
                     />
+
+                    <Route
+                        path="/ai"
+                        element={<AIAssistant />}
+                    />
+
                 </Route>
 
+                {/* Default Route */}
                 <Route
                     path="/"
                     element={
                         isAuthenticated ? (
-                            <Navigate to="/dashboard" replace />
+                            <Navigate
+                                to="/dashboard"
+                                replace
+                            />
                         ) : (
-                            <Navigate to="/login" replace />
+                            <Navigate
+                                to="/login"
+                                replace
+                            />
                         )
                     }
                 />
 
+                {/* Fallback */}
                 <Route
                     path="*"
                     element={
                         isAuthenticated ? (
-                            <Navigate to="/dashboard" replace />
+                            <Navigate
+                                to="/dashboard"
+                                replace
+                            />
                         ) : (
-                            <Navigate to="/login" replace />
+                            <Navigate
+                                to="/login"
+                                replace
+                            />
                         )
                     }
                 />
+
             </Routes>
         </BrowserRouter>
     );

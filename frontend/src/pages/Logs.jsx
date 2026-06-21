@@ -17,6 +17,8 @@ function Logs() {
 
             const data = await response.json();
 
+            console.log("LOGS API RESPONSE:", data);
+
             setLogs(data.logs || []);
             setFilteredLogs(data.logs || []);
         } catch (error) {
